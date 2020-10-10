@@ -6,9 +6,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin =  {"html:target/cucumber","json:target/cucumber.json","junit:target/cucumber.xml"},
+        plugin =  {"html:target/cucumber","json:target/cucumber.json","junit:target/cucumber.xml","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
         features ={"src/test/java/com/framework/features"},
-        glue={"com.framework.stepDef"}
+        tags = {"@Register-PositiveFlow"},
+        dryRun = true,
+        monochrome = true,
+        glue={"com.framework.stepDefs"}
         )
 public class TestRunner {
 }

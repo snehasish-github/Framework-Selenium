@@ -1,10 +1,13 @@
 package com.framework.base;
 
+import com.framework.utils.WebEventListener;
 import io.cucumber.java.Before;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,14 +18,16 @@ import java.util.concurrent.TimeUnit;
 
 public class DriverManager {
     public WebDriver driver;
-    Properties prop;
+    public static Properties prop;
+    public EventFiringWebDriver eventDriver;
+    public WebEventListener eventListner;
 
 
     public void loadProperty(){
         try{
-            InputStream inputStream=new FileInputStream(System.getProperty("user.dir").
-                    concat(File.separator).
-                    concat("config.properties"));
+            InputStream inputStream=new FileInputStream(System.getProperty("user.dir")
+                    .concat(File.separator)
+                    .concat("config.properties"));
             prop=new Properties();
             prop.load(inputStream);
         }
@@ -34,8 +39,8 @@ public class DriverManager {
     public String getProperty(String propertyName){
         try{
             if(prop==null){
+                System.out.println("property null check");
                 loadProperty();
-                System.out.println("Executed");
             }
             return prop.getProperty(propertyName);
         }
@@ -53,20 +58,28 @@ public class DriverManager {
                     System.getProperty("user.dir")
                             + "\\Resources\\chromedriver.exe");
             driver = new ChromeDriver();
-        } else if (browser.equalsIgnoreCase("firefox"))
+
+        }
+        else if (browser.equalsIgnoreCase("firefox"))
         {
             System.setProperty("webdriver.gecko.driver",
-                    "\\Resources\\geckodriver.exe");
+                    System.getProperty("user.dir")
+                            + "\\Resources\\geckodriver.exe");
             // DesiredCapabilities capabilities=DesiredCapabilities.firefox();
-            //capabilities.setCapability("marionette", true);
+            // capabilities.setCapability("marionette", true);
             driver = new FirefoxDriver();
 
-        } else if (browser.equalsIgnoreCase("ie")) {
+        }
+        else if (browser.equalsIgnoreCase("ie")) {
             System.setProperty("webdriver.ie.driver",
                     System.getProperty("user.dir")
                             + "\\Resources\\IEDriverServer.exe");
             driver = new InternetExplorerDriver();
         }
+        eventDriver=new EventFiringWebDriver(driver);
+        eventListner=new WebEventListener();
+        eventDriver.register(eventListner);
+        driver=eventDriver;
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 

@@ -14,6 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyy_MM_dd_HH_mm_ss</maven.build.timestamp.format>
   </properties>
 
   <dependencies>
@@ -23,6 +25,13 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>6.14.3</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
@@ -49,13 +58,40 @@
       <version>4.8.1</version>
       <!--      <scope>test</scope>-->
     </dependency>
+    <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-testng</artifactId>
+      <version>4.8.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-picocontainer</artifactId>
       <version>4.2.6</version>
     </dependency>
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports-cucumber4-adapter</artifactId>
+      <version>1.0.12</version>
+      <exclusions>
+        <exclusion>
+          <groupId>io.cucumber</groupId>
+          <artifactId>cucumber-java</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.cucumber</groupId>
+          <artifactId>cucumber-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
-
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -79,8 +115,21 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>2.22.2</version>
+          <configuration>
+            <testFailureIgnore>true</testFailureIgnore>
+            <suiteXmlFiles>
+              <suiteXmlFile>testng.xml</suiteXmlFile>
+            </suiteXmlFiles>
+<!--            <systemPropertyVariables>-->
+<!--              <extent.reporter.spark.start>true</extent.reporter.spark.start>-->
+<!--              <extent.reporter.spark.out>test-output/${timestamp}/ExtentSpark.html</extent.reporter.spark.out>-->
+<!--              <screesnshot.dir>test-output/${timestamp}/</screesnshot.dir>-->
+<!--              <screenshot.rel.path>../</screenshot.rel.path>-->
+<!--            </systemPropertyVariables>-->
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
