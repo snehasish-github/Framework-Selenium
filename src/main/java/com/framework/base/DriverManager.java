@@ -8,6 +8,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,6 +70,8 @@ public class DriverManager {
             // DesiredCapabilities capabilities=DesiredCapabilities.firefox();
             // capabilities.setCapability("marionette", true);
             driver = new FirefoxDriver();
+            WebDriverWait wait=new WebDriverWait(driver,10);
+
 
         }
         else if (browser.equalsIgnoreCase("ie")) {

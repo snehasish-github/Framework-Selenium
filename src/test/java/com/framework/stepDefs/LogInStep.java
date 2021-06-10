@@ -7,6 +7,19 @@ import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 public class LogInStep {
     private DriverManager driverManager;
@@ -20,7 +33,7 @@ public class LogInStep {
         this.uiOperator=uiOperator;
     }
 
-    @Before
+   /* @Before
 
     public void before(Scenario scenario)
     {
@@ -30,7 +43,7 @@ public class LogInStep {
         String Url=driverManager.getProperty("appURL");
         driverManager.driver.get(Url);
 
-    }
+    }*/
 
     @Given("User Login to application with {string},{string}")
     public void user_Login_to_application_with(String userName, String password) {
@@ -52,18 +65,36 @@ public class LogInStep {
             logInPage=new LogInPage(driverManager.driver,uiOperator);
             logInPage.searchProduct("Dress");
             uiOperator.takeScreenshot(scenario);
-
+            FluentWait wait=new FluentWait(driverManager.driver);
+            wait.withTimeout(Duration.ofSeconds(20));
+            wait.pollingEvery(Duration.ofSeconds(5));
+            wait.ignoring(NoSuchElementException.class);
+            Function<WebDriver,Boolean> fn=(webdriver)->{
+                List<WebElement> allEle= webdriver.findElements(By.name("foo"));
+                List allText= new ArrayList<>();
+                for(WebElement e: allEle)
+                {
+                    String textEle= e.getText();
+                    if(textEle.equals("SomeData"))
+                        allText.add(textEle);
+                    if(allText.size()==10)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            wait.until(fn);
         }
         catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
 
-    @After
+   /* @After
     public void tearDown(){
         driverManager.driver.quit();
-    }
+    }*/
 
 }

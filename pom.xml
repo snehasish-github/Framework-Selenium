@@ -129,6 +129,8 @@
 <!--              <screesnshot.dir>test-output/${timestamp}/</screesnshot.dir>-->
 <!--              <screenshot.rel.path>../</screenshot.rel.path>-->
 <!--            </systemPropertyVariables>-->
+            <parallel>methods</parallel>
+            <threadCount>2</threadCount>
           </configuration>
         </plugin>
         <plugin>

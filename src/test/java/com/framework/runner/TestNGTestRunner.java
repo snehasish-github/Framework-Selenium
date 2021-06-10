@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
                 "junit:target/cucumber.xml",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
         features ={"src/test/java/com/framework/features"},
-//        tags = {"@Register-PositiveFlow"},
+        tags = {"@sortTest1"},
         dryRun = false,
         monochrome = true,
         glue={"com.framework.stepDefs"}
